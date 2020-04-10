@@ -36,7 +36,6 @@ class MagratheaImage extends MagratheaImageBase {
 	 * load image options
 	 */
 	public function SilentLoad(){
-		$this->LoadConfig();
 		try{
 			/*
 			if(!$this->checkValidGd()){
@@ -58,6 +57,7 @@ class MagratheaImage extends MagratheaImageBase {
 	 * @return itself
 	 */
 	public function Load(){
+		$this->LoadConfig();
 		$this->SilentLoad();
 		return $this;
 	}
@@ -222,7 +222,7 @@ class MagratheaImage extends MagratheaImageBase {
 
 
 	/**
-	 * private function: resize and rop image in the sent height
+	 * private function: resize and crop image in the sent height
 	 * @param 	array 	$thisSize 	size, in format: ("width" => width, "height" => "height")
 	 */	
 	private function ResizeToAndCrop($thisSize){
@@ -264,7 +264,7 @@ class MagratheaImage extends MagratheaImageBase {
 	 * Saves image file
 	 * @return itself
 	 */
-	private function SaveFile(){
+	public function SaveFile(){
 		$this->imgName = $this->GetFileNameWithoutExtension()."_".implode("x", $this->imgSize).".".$this->extension;
 		$fname = $this->generatedPath.$this->imgName;
 		if(!file_exists($fname))
@@ -289,6 +289,16 @@ class MagratheaImage extends MagratheaImageBase {
 		return $this;
 	}
 	/**
+	 * Manually sets configuration for MagratheaImages
+	 */
+	public function SetConfig($imagePath, $generatedPath, $webFolder = "", $webGeneratedFolder = "") {
+		$this->imagesPath = $imagePath;
+		$this->generatedPath = $generatedPath;
+		$this->webImagesFolder = $webFolder;
+		$this->webImagesGenerated = $webGeneratedFolder;
+		return $this;
+	}
+	/**
 	 * Gets image url
 	 * @return 	string 		image url, in web format
 	 */
@@ -301,6 +311,14 @@ class MagratheaImage extends MagratheaImageBase {
 	 */
 	public function GetImagePath(){
 		return $this->imagesPath.$this->filename;
+	}
+	/**
+	 * Sets the width and height from the image
+	 * @return 	itself
+	 */
+	public function SetWidthAndHeight() {
+		$this->GetWidthHeight();
+		return $this;
 	}
 	/**
 	 * Sets the width and height from the image
