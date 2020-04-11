@@ -42,7 +42,13 @@ class MagratheaImage extends MagratheaImageBase {
 				throw new Exception("Image Format invalid");
 			}
 			*/
-			$this->image = WideImage::loadFromFile($this->imagesPath.$this->filename);
+			$imageLocation = $this->imagesPath.$this->filename;
+			if(file_exists($imageLocation)) {
+				$this->image = WideImage::loadFromFile($imageLocation);
+			} else {
+				Debug("image not found: ".$this->filename);
+				$this->LoadDefaultImage();
+			}
 		} catch(Exception $ex){
 			$this->error = $this->error."\n".$ex->getMessage();
 			$this->isError = true;
@@ -78,6 +84,13 @@ class MagratheaImage extends MagratheaImageBase {
 		}
 	}
 
+	private function LoadDefaultImage() {
+		$this->filename = "dummy.jpg";
+		$defaultImageFolder = __DIR__."/../default/";
+		$defaultImageFile = realpath($defaultImageFolder.$this->filename);
+		Debug("loading default ".$defaultImageFile);
+		$this->image = WideImage::loadFromFile($defaultImageFile);
+	}
 
 	/**
 	 * Builds thumb image with the predefined thumb size
